@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tasks">
+<link rel="manifest" href="manifest.json">
+<title>Tasks</title>
+<style>
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: #f2f2f7;
+    margin: 0;
+    padding: 20px;
+    padding-top: 60px;
+}
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #000;
+}
+h2 {
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    color: #666;
+}
+.list-container {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e5e5ea;
+}
+.task-item:last-child {
+    border-bottom: none;
+}
+.task-text {
+    font-size: 17px;
+}
+.btn {
+    background: #007aff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.btn-delete {
+    background: #ff3b30;
+}
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+input[type="text"] {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+</style>
+</head>
+<body>
+
+<h1>הרשימות שלי</h1>
+
+<h2>משימות יומיות</h2>
+<div class="input-group">
+    <input type="text" id="dailyInput" placeholder="הוסף משימה יומית...">
+    <button class="btn" onclick="addDailyTask()">הוסף</button>
+</div>
+<div class="list-container" id="dailyList"></div>
+
+<h2>משימות קבועות</h2>
+<div class="input-group">
+    <input type="text" id="permanentInput" placeholder="הוסף משימה קבועה...">
+    <button class="btn" onclick="addPermanentTask()">הוסף</button>
+</div>
+<div class="list-container" id="permanentList"></div>
+
+<script>
+let dailyTasks = JSON.parse(localStorage.getItem('dailyTasks')) || [];
+let permanentTasks = JSON.parse(localStorage.getItem('permanentTasks')) || [];
+
+function saveTasks() {
+    localStorage.setItem('dailyTasks', JSON.stringify(dailyTasks));
+    localStorage.setItem('permanentTasks', JSON.stringify(permanentTasks));
+}
+
+function getTodayDate() {
+    const d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+}
+
+function renderTasks() {
+    const dailyListEl = document.getElementById('dailyList');
+    const permanentListEl = document.getElementById('permanentList');
+    dailyListEl.innerHTML = '';
+    permanentListEl.innerHTML = '';
+    
+    const today = getTodayDate();
+
+    dailyTasks.forEach((task, index) => {
+        if (task.lastHiddenDate !== today) {
+            const div = document.createElement('div');
+            div.className = 'task-item';
+            div.innerHTML = `
+                <span class="task-text">${task.text}</span>
+                <button class="btn btn-delete" onclick="completeDaily(${index})">סיום להיום</button>
+            `;
+            dailyListEl.appendChild(div);
+        }
+    });
+
+    permanentTasks.forEach((task, index) => {
+        const div = document.createElement('div');
+        div.className = 'task-item';
+        div.innerHTML = `
+            <span class="task-text">${task}</span>
+            <button class="btn btn-delete" onclick="deletePermanent(${index})">מחיקה לתמיד</button>
+        `;
+        permanentListEl.appendChild(div);
+    });
+}
+
+function addDailyTask() {
+    const val = document.getElementById('dailyInput').value.trim();
+    if (val) {
+        dailyTasks.push({ text: val, lastHiddenDate: "" });
+        document.getElementById('dailyInput').value = '';
+        saveTasks();
+        renderTasks();
+    }
+}
+
+function addPermanentTask() {
+    const val = document.getElementById('permanentInput').value.trim();
+    if (val) {
+        permanentTasks.push(val);
+        document.getElementById('permanentInput').value = '';
+        saveTasks();
+        renderTasks();
+    }
+}
+
+function completeDaily(index) {
+    dailyTasks[index].lastHiddenDate = getTodayDate();
+    saveTasks();
+    renderTasks();
+}
+
+function deletePermanent(index) {
+    permanentTasks.splice(index, 1);
+    saveTasks();
+    renderTasks();
+}
+
+renderTasks();
+</script>
+</body>
+</html>

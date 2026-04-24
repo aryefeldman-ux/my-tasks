@@ -126,8 +126,8 @@ function renderTasks() {
             div.innerHTML = `
                 <span class="task-text">${task.text}</span>
                 <div class="buttons-group">
-                    <button class="btn btn-done" onclick="completeDaily(${index})">סיום</button>
-                    <button class="btn btn-delete" onclick="deleteDaily(${index})">מחיקה</button>
+                    <button class="btn btn-done" onclick="completeDaily(${index})">בוצע</button>
+                    <button class="btn btn-delete" onclick="deleteDaily(${index})">מחיקת המטלה</button>
                 </div>
             `;
             dailyListEl.appendChild(div);
@@ -139,7 +139,7 @@ function renderTasks() {
         div.className = 'task-item';
         div.innerHTML = `
             <span class="task-text">${task}</span>
-            <button class="btn btn-delete" onclick="deletePermanent(${index})">מחיקה לתמיד</button>
+            <button class="btn btn-done" onclick="deletePermanent(${index})">בוצע</button>
         `;
         permanentListEl.appendChild(div);
     });
@@ -185,7 +185,5 @@ function deletePermanent(index) {
 
 renderTasks();
 </script>
-</body>
-</html>
 </body>
 </html>

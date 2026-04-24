@@ -58,6 +58,13 @@ h2 {
 .btn-delete {
     background: #ff3b30;
 }
+.btn-done {
+    background: #34c759;
+}
+.buttons-group {
+    display: flex;
+    gap: 8px;
+}
 .input-group {
     display: flex;
     gap: 10px;
@@ -118,7 +125,10 @@ function renderTasks() {
             div.className = 'task-item';
             div.innerHTML = `
                 <span class="task-text">${task.text}</span>
-                <button class="btn btn-delete" onclick="completeDaily(${index})">סיום להיום</button>
+                <div class="buttons-group">
+                    <button class="btn btn-done" onclick="completeDaily(${index})">סיום</button>
+                    <button class="btn btn-delete" onclick="deleteDaily(${index})">מחיקה</button>
+                </div>
             `;
             dailyListEl.appendChild(div);
         }
@@ -161,6 +171,12 @@ function completeDaily(index) {
     renderTasks();
 }
 
+function deleteDaily(index) {
+    dailyTasks.splice(index, 1);
+    saveTasks();
+    renderTasks();
+}
+
 function deletePermanent(index) {
     permanentTasks.splice(index, 1);
     saveTasks();
@@ -169,5 +185,7 @@ function deletePermanent(index) {
 
 renderTasks();
 </script>
+</body>
+</html>
 </body>
 </html>

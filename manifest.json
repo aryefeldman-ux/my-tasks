@@ -1,8 +1,16 @@
 {
-  "name": "My Tasks",
+  "name": "המשימות שלי",
   "short_name": "Tasks",
+  "start_url": "./index.html",
   "display": "standalone",
-  "start_url": "index.html",
   "background_color": "#f2f2f7",
-  "theme_color": "#f2f2f7"
+  "theme_color": "#007aff",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/906/906334.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
